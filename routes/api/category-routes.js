@@ -32,7 +32,6 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', (req, res) => {
   // create a new category
-  console.log(req.body);
   if(!req.body.category_name){
     res.status(400).json({message: 'Could not create category.'});
     return;
@@ -46,6 +45,17 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   // update a category by its `id` value
+  try{
+    const catData = Category.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+    const cat = catData.get({ plain: true });
+    res.json(cat);
+  } catch (err) {
+      res.status(500).json(err);
+  }; 
 });
 
 router.delete('/:id', (req, res) => {
